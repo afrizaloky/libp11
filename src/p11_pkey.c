@@ -270,7 +270,7 @@ static int pkcs11_params_pss(CK_RSA_PKCS_PSS_PARAMS *pss,
 		if (salt_len < 0) /* integer underflow detected */
 			return -1;
 	}
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "salt_len=%d sig_md=%s mdf1_md=%s\n",
 		salt_len, EVP_MD_name(sig_md), EVP_MD_name(mgf1_md));
 #endif
@@ -295,7 +295,7 @@ static int pkcs11_params_oaep(CK_RSA_PKCS_OAEP_PARAMS *oaep,
 		return -1;
 	if (EVP_PKEY_CTX_get_rsa_mgf1_md(ctx, &mgf1_md) <= 0)
 		return -1;
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "oaep_md=%s mdf1_md=%s\n",
 		EVP_MD_name(oaep_md), EVP_MD_name(mgf1_md));
 #endif
@@ -329,7 +329,7 @@ static int pkcs11_try_pkey_rsa_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 	CK_MECHANISM mechanism;
 	CK_RSA_PKCS_PSS_PARAMS pss_params;
 
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d pkcs11_try_pkey_rsa_sign() "
 		"sig=%p *siglen=%lu tbs=%p tbslen=%lu\n",
 		__FILE__, __LINE__, sig, *siglen, tbs, tbslen);
@@ -363,7 +363,7 @@ static int pkcs11_try_pkey_rsa_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 	EVP_PKEY_CTX_get_rsa_padding(evp_pkey_ctx, &padding);
 	switch (padding) {
 	case RSA_PKCS1_PSS_PADDING:
-#ifdef DEBUG
+#ifndef DEBUG
 		fprintf(stderr, "%s:%d padding=RSA_PKCS1_PSS_PADDING\n",
 			__FILE__, __LINE__);
 #endif
@@ -374,7 +374,7 @@ static int pkcs11_try_pkey_rsa_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 		mechanism.ulParameterLen = sizeof pss_params;
 		break;
 	default:
-#ifdef DEBUG
+#ifndef DEBUG
 		fprintf(stderr, "%s:%d unsupported padding: %d\n",
 			__FILE__, __LINE__, padding);
 #endif
@@ -392,7 +392,7 @@ static int pkcs11_try_pkey_rsa_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 		rv = CRYPTOKI_call(ctx,
 			C_Sign(session, (CK_BYTE_PTR)tbs, tbslen, sig, &size));
 	pkcs11_put_session(slot, session);
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d C_SignInit or C_Sign rv=%d\n",
 		__FILE__, __LINE__, rv);
 #endif
@@ -430,7 +430,7 @@ static int pkcs11_try_pkey_rsa_decrypt(EVP_PKEY_CTX *evp_pkey_ctx,
 	CK_MECHANISM mechanism;
 	CK_RSA_PKCS_OAEP_PARAMS oaep_params;
 
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d pkcs11_try_pkey_rsa_decrypt() "
 		"out=%p *outlen=%lu in=%p inlen=%lu\n",
 		__FILE__, __LINE__, out, *outlen, in, inlen);
@@ -461,7 +461,7 @@ static int pkcs11_try_pkey_rsa_decrypt(EVP_PKEY_CTX *evp_pkey_ctx,
 	EVP_PKEY_CTX_get_rsa_padding(evp_pkey_ctx, &padding);
 	switch (padding) {
 	case RSA_PKCS1_OAEP_PADDING:
-#ifdef DEBUG
+#ifndef DEBUG
 		fprintf(stderr, "%s:%d padding=RSA_PKCS1_OAEP_PADDING\n",
 			__FILE__, __LINE__);
 #endif
@@ -472,7 +472,7 @@ static int pkcs11_try_pkey_rsa_decrypt(EVP_PKEY_CTX *evp_pkey_ctx,
 		mechanism.ulParameterLen = sizeof oaep_params;
 		break;
 	case RSA_PKCS1_PADDING:
-#ifdef DEBUG
+#ifndef DEBUG
 		fprintf(stderr, "%s:%d padding=RSA_PKCS1_PADDING\n",
 			__FILE__, __LINE__);
 #endif
@@ -481,7 +481,7 @@ static int pkcs11_try_pkey_rsa_decrypt(EVP_PKEY_CTX *evp_pkey_ctx,
 		mechanism.ulParameterLen = 0;
 		break;
 	default:
-#ifdef DEBUG
+#ifndef DEBUG
 		fprintf(stderr, "%s:%d unsupported padding: %d\n",
 			__FILE__, __LINE__, padding);
 #endif
@@ -499,7 +499,7 @@ static int pkcs11_try_pkey_rsa_decrypt(EVP_PKEY_CTX *evp_pkey_ctx,
 		rv = CRYPTOKI_call(ctx,
 			C_Decrypt(session, (CK_BYTE_PTR)in, inlen, out, &size));
 	pkcs11_put_session(slot, session);
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d C_DecryptInit or C_Decrypt rv=%d\n",
 		__FILE__, __LINE__, rv);
 #endif
@@ -569,7 +569,7 @@ static int pkcs11_try_pkey_ec_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 	ECDSA_SIG *ossl_sig;
 	CK_MECHANISM mechanism;
 
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d pkcs11_try_pkey_ec_sign() "
 		"sig=%p *siglen=%lu tbs=%p tbslen=%lu\n",
 		__FILE__, __LINE__, sig, *siglen, tbs, tbslen);
@@ -627,7 +627,7 @@ static int pkcs11_try_pkey_ec_sign(EVP_PKEY_CTX *evp_pkey_ctx,
 			C_Sign(session, (CK_BYTE_PTR)tbs, tbslen, sig, &size));
 	pkcs11_put_session(slot, session);
 
-#ifdef DEBUG
+#ifndef DEBUG
 	fprintf(stderr, "%s:%d C_SignInit or C_Sign rv=%d\n",
 		__FILE__, __LINE__, rv);
 #endif

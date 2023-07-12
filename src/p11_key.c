@@ -130,7 +130,7 @@ PKCS11_OBJECT_private *pkcs11_object_from_handle(PKCS11_SLOT_private *slot,
 	case CKO_PRIVATE_KEY:
 		if (pkcs11_getattr_val(ctx, session, object, CKA_ALWAYS_AUTHENTICATE,
 				&obj->always_authenticate, sizeof(CK_BBOOL))) {
-#ifdef DEBUG
+#ifndef DEBUG
 			fprintf(stderr, "Missing CKA_ALWAYS_AUTHENTICATE attribute\n");
 #endif
 		}
