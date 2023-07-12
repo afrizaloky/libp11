@@ -186,6 +186,7 @@ static void EVP_PKEY_meth_get_decrypt(EVP_PKEY_METHOD *pmeth,
 
 static CK_MECHANISM_TYPE pkcs11_md2ckm(const EVP_MD *md)
 {
+	// LEARN: debug
 	switch (EVP_MD_type(md)) {
 	case NID_sha1:
 		return CKM_SHA_1;
@@ -214,6 +215,7 @@ static CK_MECHANISM_TYPE pkcs11_md2ckm(const EVP_MD *md)
 
 static CK_RSA_PKCS_MGF_TYPE pkcs11_md2ckg(const EVP_MD *md)
 {
+	// LEARN: debug
 	switch (EVP_MD_type(md)) {
 	case NID_sha1:
 		return CKG_MGF1_SHA1;
